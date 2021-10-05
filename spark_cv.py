@@ -5,12 +5,13 @@ from functools import reduce
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.classification import LogisticRegression
 from pyspark.ml import Pipeline
-from sparkdl import DeepImageFeaturizer
+#from sparkdl import DeepImageFeaturizer
 
 # create a spark session
 spark = SparkSession.builder.appName('DigitRecog').getOrCreate()
 # loaded image
 zero = spark.read.format("image").load("mnist_data/0")
+print(zero.show(5))
 one = spark.read.format("image").load("mnist_data/1")
 two = spark.read.format("image").load("mnist_data/2")
 three = spark.read.format("image").load("mnist_data/3")
