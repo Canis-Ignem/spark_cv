@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     predictionAndLabels = result.select("prediction", "label")
     evaluator = MulticlassClassificationEvaluator()
-
-    print("Precision LR: " + str(evaluator.evaluate(predictionAndLabels)))
+    acc = evaluator.evaluate(predictionAndLabels)
+    print("Precision LR: ", acc)
 
     
