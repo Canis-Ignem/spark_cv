@@ -26,3 +26,33 @@ df = df.repartition(200)
 train, test = df.randomSplit([0.8, 0.2], 42)
 
 print(train.show(5))
+
+
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+from pyspark.ml.classification import LogisticRegression
+from pyspark.ml import Pipeline
+from sparkdl import DeepImageFeaturizer
+# model: InceptionV3
+# extracting feature from images
+featurizer = DeepImageFeaturizer(inputCol="image",
+                                 outputCol="features",
+                                 modelName="InceptionV3")
+# used as a multi class classifier
+lr = LogisticRegression(maxIter=5, regParam=0.03, 
+                        elasticNetParam=0.5, labelCol="label")
+# define a pipeline model
+sparkdn = Pipeline(stages=[featurizer, lr])
+spark_model = sparkdn.fit(train) # start fitting or training
+
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+# evaluate the model with test set
+evaluator = MulticlassClassificationEvaluator() 
+tx_test = spark_model.transform(test)
+print('F1-Score ', evaluator.evaluate(tx_test, 
+                                      {evaluator.metricName: 'f1'}))
+print('Precision ', evaluator.evaluate(tx_test,
+                                       {evaluator.metricName:                    'weightedPrecision'}))
+print('Recall ', evaluator.evaluate(tx_test, 
+                                    {evaluator.metricName: 'weightedRecall'}))
+print('Accuracy ', evaluator.evaluate(tx_test, 
+                                      {evaluator.metricName: 'accuracy'}))
