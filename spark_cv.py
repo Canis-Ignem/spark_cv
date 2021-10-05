@@ -16,7 +16,8 @@ from pyspark.ml.feature import VectorAssembler
 
 if __name__ == "__main__":
     conf = SparkConf(True)
-    conf.set("spark.executor.memory", "8g")
+    conf.set("spark.executor.memory", "32g")
+    conf.set('spark.executor.cores', '8')
 
     sc = SparkContext(
         appName="multilayer_perceptron_classification_example",
@@ -45,10 +46,11 @@ if __name__ == "__main__":
 
     mlp = MultilayerPerceptronClassifier(maxIter=10, layers=layers, blockSize=128, seed=1234)
 
+    print("---Training---")
     model = mlp.fit(train)
 
     result = model.transform(test)
-
+    print("---Testing---")
     predictionAndLabels = result.select("prediction", "label")
 
     evaluator = MulticlassClassificationEvaluator(metricName="precision")
