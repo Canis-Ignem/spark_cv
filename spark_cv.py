@@ -32,7 +32,6 @@ if __name__ == "__main__":
     conf.set("spark.executor.memory", "8g")
 
     sc = SparkContext(
-        master="spark://169.254.147.148:7077",
         appName="multilayer_perceptron_classification_example",
         conf=conf
     )
