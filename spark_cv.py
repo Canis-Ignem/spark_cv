@@ -37,7 +37,7 @@ if __name__ == "__main__":
             .toDF("label", "features")
             .cache())
 
-    print(training.printSchema())
+    print(training.show(5))
 
     '''
     layers = [28*28, 1024, 10]
