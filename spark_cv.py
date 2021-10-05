@@ -2,7 +2,7 @@ from __future__ import print_function
 
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SQLContext
-from pyspark.ml.classification import LogisticRegression, OneVsRest
+from pyspark.ml.classification import LogisticRegression, OneVsRest, MultilayerPerceptronClassifier
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.feature import VectorAssembler
 
@@ -37,23 +37,28 @@ if __name__ == "__main__":
 
     
     lr = LogisticRegression(maxIter=10, tol=1E-6, fitIntercept=True)
-
-    # instantiate the One Vs Rest Classifier.
     ovr = OneVsRest(classifier=lr)
 
-    print("---Training---")
-    model = ovr.fit(train)
+    layers = [28*28, 1024, 10]
+    mlp = MultilayerPerceptronClassifier(maxIter=100, layers=layers, blockSize=128, seed=0)
 
-    
+    print("---Training---")
+
+    print("LR:")
+    model_lr = ovr.fit(train)
+    model_mlp = mlp.fit(train)
+    print("MLP:")
     print("---Testing---")
 
-    result = model.transform(test)
-    print(result.printSchema())
+    result_lr = model_lr.transform(test)
+    result_mlp = model_lr.transform(test)
 
-    predictionAndLabels = result.select("prediction", "label")
+    predictionAndLabels_lr = result_lr.select("prediction", "label")
+    predictionAndLabels_mlp = result_mlp.select("prediction", "label")
 
     evaluator = MulticlassClassificationEvaluator()
 
-    print("Precision: " + str(evaluator.evaluate(predictionAndLabels)))
+    print("Precision LR: " + str(evaluator.evaluate(predictionAndLabels_lr)))
+    print("Precision MLP: " + str(evaluator.evaluate(predictionAndLabels_mlp)))
 
     
