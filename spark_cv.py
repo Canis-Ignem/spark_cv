@@ -27,11 +27,9 @@ if __name__ == "__main__":
     features = train.schema.names[1:]
     vectorizer = VectorAssembler(inputCols=features, outputCol="features")
 
-    training = (vectorizer
-            .transform(train)
-            .select("label", "features")
-            .toDF("label", "features")
-            .cache())
+    training = vectorizer.transform(train).select("label", "features")
+    print(training.printSchema())
+
 
     print(training.show(5))
 
