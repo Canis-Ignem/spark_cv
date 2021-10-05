@@ -10,17 +10,16 @@ from pyspark.ml import Pipeline
 # create a spark session
 spark = SparkSession.builder.appName('DigitRecog').getOrCreate()
 # loaded image
-zero = spark.read.format("image").load("mnist_data/0")
-print(zero.show(5))
-one = spark.read.format("image").load("mnist_data/1")
-two = spark.read.format("image").load("mnist_data/2")
-three = spark.read.format("image").load("mnist_data/3")
-four = spark.read.format("image").load("mnist_data/4")
-five = spark.read.format("image").load("mnist_data/5")
-six = spark.read.format("image").load("mnist_data/6")
-seven = spark.read.format("image").load("mnist_data/7")
-eight = spark.read.format("image").load("mnist_data/8")
-nine = spark.read.format("image").load("mnist_data/9")
+zero = spark.read.format("image").load("mnist_data/0").withColumn("label", lit(0))
+one = spark.read.format("image").load("mnist_data/1").withColumn("label", lit(1))
+two = spark.read.format("image").load("mnist_data/2").withColumn("label", lit(2))
+three = spark.read.format("image").load("mnist_data/3").withColumn("label", lit(3))
+four = spark.read.format("image").load("mnist_data/4").withColumn("label", lit(4))
+five = spark.read.format("image").load("mnist_data/5").withColumn("label", lit(5))
+six = spark.read.format("image").load("mnist_data/6").withColumn("label", lit(6))
+seven = spark.read.format("image").load("mnist_data/7").withColumn("label", lit(7))
+eight = spark.read.format("image").load("mnist_data/8").withColumn("label", lit(8))
+nine = spark.read.format("image").load("mnist_data/9").withColumn("label", lit(9))
 
 print(zero.printSchema())
 dataframes = [zero, one, two, three,four,
@@ -34,15 +33,11 @@ train, test = df.randomSplit([0.8, 0.2], 42)
 
 print(train.show(5))
 
-featurizer = DeepImageFeaturizer(inputCol="image",
-                                 outputCol="features",
-                                 modelName="InceptionV3")
-
 
 lr = LogisticRegression(maxIter=5, regParam=0.03, 
-                        elasticNetParam=0.5, labelCol="label")
+                        elasticNetParam=0.5, featuresCol='data', labelCol="label")
 # define a pipeline model
-sparkdn = Pipeline(stages=[featurizer, lr])
+sparkdn = Pipeline(stages=[ lr])
 spark_model = sparkdn.fit(train)
 
 
