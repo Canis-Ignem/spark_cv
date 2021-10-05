@@ -5,21 +5,25 @@ from functools import reduce
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.classification import LogisticRegression
 from pyspark.ml import Pipeline
-from sparkdl import DeepImageFeaturizer
+from sparkdl import readImages
+from pyspark.ml.image import ImageSchema
+from sparkdl.image import imageIO
+
+
 
 # create a spark session
 spark = SparkSession.builder.appName('DigitRecog').getOrCreate()
 # loaded image
-zero = spark.read.format("image").load("mnist_data/0")
-one = spark.read.format("image").load("mnist_data/1")
-two = spark.read.format("image").load("mnist_data/2")
-three = spark.read.format("image").load("mnist_data/3")
-four = spark.read.format("image").load("mnist_data/4")
-five = spark.read.format("image").load("mnist_data/5")
-six = spark.read.format("image").load("mnist_data/6")
-seven = spark.read.format("image").load("mnist_data/7")
-eight = spark.read.format("image").load("mnist_data/8")
-nine = spark.read.format("image").load("mnist_data/9")
+zero = readImages("mnist_data/0")
+one =  readImages("mnist_data/1")
+two =  readImages("mnist_data/2")
+three =  readImages("mnist_data/3")
+four =  readImages("mnist_data/4")
+five =  readImages("mnist_data/5")
+six =  readImages("mnist_data/6")
+seven =  readImages("mnist_data/7")
+eight =  readImages("mnist_data/8")
+nine =  readImages("mnist_data/9")
 
 print(zero.printSchema())
 dataframes = [zero, one, two, three,four,
