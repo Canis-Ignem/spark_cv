@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     print(training.show(5))
 
-    train, test = training.randomSplit([0.8,0.2], 0)
+    train, test = training.randomSplit([0.8,0.2], 1)
 
     
     lr = LogisticRegression(maxIter=10, tol=1E-6, fitIntercept=True)
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     ovr = OneVsRest(classifier=lr)
 
     print("---Training---")
-    model = ovr.fit(train)
+    model = lr.fit(train)
 
     result = model.transform(test)
     print("---Testing---")
