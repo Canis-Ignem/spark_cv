@@ -46,8 +46,9 @@ if __name__ == "__main__":
     print("---Training---")
     model = lr.fit(train)
 
-    result = model.transform(test)
+    
     print("---Testing---")
+    result = model.transform(test)
     predictionAndLabels = result.select("prediction", "label")
 
     evaluator = MulticlassClassificationEvaluator(metricName="precision")
