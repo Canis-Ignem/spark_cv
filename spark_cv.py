@@ -8,6 +8,8 @@ from pyspark.ml.classification import MultilayerPerceptronClassifier
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.sql.types import StructType, StructField, StringType, DoubleType, ArrayType
 
+from pyspark.ml.feature import VectorAssembler
+
 
 
 
@@ -23,14 +25,21 @@ if __name__ == "__main__":
 
     sqlContext = SQLContext(sc)
 
-    # train = data_frame_from_file(sqlContext, "mnist_train.csv", 0.01)
-    # test = data_frame_from_file(sqlContext, "mnist_test.csv", 0.01)
 
-    train = sqlContext.read.format('com.databricks.spark.csv').options(header = False, inferschema = True, sep = ",").load("mnist_data/train.csv")
-    columns = train.schema.names
-    print(columns)
-    print(train.printSchema())
+    train = sqlContext.read.format('com.databricks.spark.csv').options(header = True, inferschema = True, sep = ",").load("mnist_data/train.csv")
+    features = train.schema.names[1:]
+    print(features)
+    vectorizer = VectorAssembler(inputCols=features, outputCol="features")
 
+    training = (vectorizer
+            .transform(train)
+            .select("_c0", "features")
+            .toDF("label", "features")
+            .cache())
+
+    print(training.printSchema())
+
+    '''
     layers = [28*28, 1024, 10]
 
     # create the trainer and set its parameters
@@ -44,3 +53,4 @@ if __name__ == "__main__":
     print("Precision: " + str(evaluator.evaluate(predictionAndLabels)))
 
     sc.stop()
+    '''
