@@ -5,7 +5,7 @@ from functools import reduce
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.classification import LogisticRegression
 from pyspark.ml import Pipeline
-from sparkdl import DeepImageFeaturizer
+#from sparkdl import DeepImageFeaturizer
 
 # create a spark session
 spark = SparkSession.builder.appName('DigitRecog').getOrCreate()
@@ -33,16 +33,16 @@ train, test = df.randomSplit([0.8, 0.2], 42)
 
 print(train.show(5))
 
-
+'''
 featurizer = DeepImageFeaturizer(inputCol="image",
                                  outputCol="features",
                                  modelName="InceptionV3")
-
+'''
 
 lr = LogisticRegression(maxIter=5, regParam=0.03, 
                         elasticNetParam=0.5, labelCol="label")
 # define a pipeline model
-sparkdn = Pipeline(stages=[featurizer, lr])
+sparkdn = Pipeline(stages=[ lr])
 spark_model = sparkdn.fit(train)
 
 
