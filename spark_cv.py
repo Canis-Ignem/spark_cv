@@ -35,7 +35,7 @@ print(train.show(5))
 
 
 lr = LogisticRegression(maxIter=5, regParam=0.03, 
-                        elasticNetParam=0.5, featuresCol='data', labelCol="label")
+                        elasticNetParam=0.5, featuresCol='image', labelCol="label")
 # define a pipeline model
 sparkdn = Pipeline(stages=[ lr])
 spark_model = sparkdn.fit(train)
