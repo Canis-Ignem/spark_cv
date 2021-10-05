@@ -9,22 +9,7 @@ from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.sql.types import StructType, StructField, StringType, DoubleType, ArrayType
 
 
-def data_frame_from_file(sqlContext, file_name, fraction):
-    lines = sc.textFile(file_name).sample(False, fraction)
-    parts = lines.map(lambda l: map(lambda s: int(s), l.split(",")))
-    samples = parts.map(lambda p: (
-        float(p[0]),
-        DenseVector(map(lambda el: int(el) / 255.0, p[1:]))
-    ))
 
-    fields = [
-        StructField("label", DoubleType(), True),
-        StructField("features", VectorUDT(), True)
-    ]
-    schema = StructType(fields)
-
-    data = sqlContext.createDataFrame(samples, schema)
-    return data
 
 
 if __name__ == "__main__":
@@ -41,9 +26,9 @@ if __name__ == "__main__":
     # train = data_frame_from_file(sqlContext, "mnist_train.csv", 0.01)
     # test = data_frame_from_file(sqlContext, "mnist_test.csv", 0.01)
 
-    train = data_frame_from_file(sqlContext, "/user/keystone/mnist_data/train.csv", 1)
-    test = data_frame_from_file(sqlContext, "/user/keystone/mnist_data/mnist_test.csv", 1)
-
+    train = sqlContext.read.format('com.databricks.spark.csv').options(header = False, inferschema = True, sep = ",").load("mnist_data/train.csv")
+    columns = train.schema.names
+    print(columns)
     print(train.printSchema())
 
     layers = [28*28, 1024, 10]
