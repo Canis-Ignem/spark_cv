@@ -36,13 +36,11 @@ print(2)
 train, test = df.randomSplit([0.8, 0.2], 42)
 print(train.printSchema())
 print(3)
-print(train.show(5))
-print(4)
 
 lr = LogisticRegression()
 
 spark_model = lr.fit(train)
-print(5)
+print(4)
 
 
 evaluator = MulticlassClassificationEvaluator() 
