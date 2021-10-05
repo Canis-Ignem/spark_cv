@@ -1,6 +1,12 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import lit
 from functools import reduce
+
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+from pyspark.ml.classification import LogisticRegression
+from pyspark.ml import Pipeline
+from sparkdl import DeepImageFeaturizer
+
 # create a spark session
 spark = SparkSession.builder.appName('DigitRecog').getOrCreate()
 # loaded image
@@ -28,24 +34,18 @@ train, test = df.randomSplit([0.8, 0.2], 42)
 print(train.show(5))
 
 
-from pyspark.ml.evaluation import MulticlassClassificationEvaluator
-from pyspark.ml.classification import LogisticRegression
-from pyspark.ml import Pipeline
-from sparkdl import DeepImageFeaturizer
-# model: InceptionV3
-# extracting feature from images
 featurizer = DeepImageFeaturizer(inputCol="image",
                                  outputCol="features",
                                  modelName="InceptionV3")
-# used as a multi class classifier
+
+
 lr = LogisticRegression(maxIter=5, regParam=0.03, 
                         elasticNetParam=0.5, labelCol="label")
 # define a pipeline model
 sparkdn = Pipeline(stages=[featurizer, lr])
-spark_model = sparkdn.fit(train) # start fitting or training
+spark_model = sparkdn.fit(train)
 
-from pyspark.ml.evaluation import MulticlassClassificationEvaluator
-# evaluate the model with test set
+
 evaluator = MulticlassClassificationEvaluator() 
 tx_test = spark_model.transform(test)
 print('F1-Score ', evaluator.evaluate(tx_test, 
