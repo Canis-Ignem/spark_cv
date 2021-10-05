@@ -12,8 +12,8 @@ from pyspark.ml.feature import VectorAssembler
 
 if __name__ == "__main__":
     conf = SparkConf(True)
-    #conf.set("spark.executor.memory", "8g")
-    #conf.set('spark.executor.cores', '2')
+    conf.set("spark.executor.memory", "32g")
+    conf.set('spark.executor.cores', '4')
 
     sc = SparkContext(
         appName="multilayer_perceptron_classification_example",
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     ovr = OneVsRest(classifier=lr)
 
     print("---Training---")
-    model = lr.fit(train)
+    model = ovr.fit(train)
 
     
     print("---Testing---")
