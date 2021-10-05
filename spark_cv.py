@@ -44,7 +44,7 @@ if __name__ == "__main__":
     ovr = OneVsRest(classifier=lr)
 
     print("---Training---")
-    model = mlp.fit(train)
+    model = ovr.fit(train)
 
     result = model.transform(test)
     print("---Testing---")
