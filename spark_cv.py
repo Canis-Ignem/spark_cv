@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SQLContext
 from pyspark.ml.classification import LogisticRegression, OneVsRest, MultilayerPerceptronClassifier
