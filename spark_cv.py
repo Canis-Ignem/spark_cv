@@ -5,9 +5,9 @@ from functools import reduce
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.classification import LogisticRegression
 from pyspark.ml import Pipeline
-from sparkdl import readImages
 from pyspark.ml.image import ImageSchema
 from sparkdl.image import imageIO
+from sparkdl import DeepImageFeaturizer
 
 
 
