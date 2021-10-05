@@ -1,3 +1,4 @@
+from __future__ import print_function
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SQLContext
 from pyspark.ml.classification import LogisticRegression, OneVsRest, MultilayerPerceptronClassifier
@@ -11,7 +12,7 @@ from pyspark.ml.feature import VectorAssembler
 if __name__ == "__main__":
     conf = SparkConf(True)
     conf.set("spark.executor.memory", "32g")
-    conf.set('spark.executor.cores', '8')
+    conf.set('spark.executor.cores', '4')
 
     sc = SparkContext(
         appName="multilayer_perceptron_classification_example",
@@ -42,15 +43,15 @@ if __name__ == "__main__":
     print("---Training---")
 
     print("LR:")
-    model_lr = ovr.fit(train)
+    model = ovr.fit(train)
 
     print("---Testing---")
 
-    result_lr = model_lr.transform(test)
+    result = model.transform(test)
 
-    predictionAndLabels_lr = result_lr.select("prediction", "label")
+    predictionAndLabels = result.select("prediction", "label")
     evaluator = MulticlassClassificationEvaluator()
 
-    print("Precision LR: " + str(evaluator.evaluate(predictionAndLabels_lr)))
+    print("Precision LR: " + str(evaluator.evaluate(predictionAndLabels)))
 
     
