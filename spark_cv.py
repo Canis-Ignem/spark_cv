@@ -36,14 +36,14 @@ if __name__ == "__main__":
 
     
     lr = LogisticRegression(maxIter=10, tol=1E-6, fitIntercept=True)
-    ovr = OneVsRest(classifier=lr)
+
 
 
 
     print("---Training---")
 
     print("LR:")
-    model = ovr.fit(train)
+    model = lr.fit(train)
 
     print("---Testing---")
 
