@@ -5,7 +5,7 @@ from functools import reduce
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.classification import LogisticRegression
 from pyspark.ml import Pipeline
-from tensorflow.python.keras.applications.resnet50 import ResNet50
+from tensorflow.python.keras.applications.resnet import ResNet50
 from sparkdl import DeepImageFeaturizer
 
 # create a spark session
