@@ -23,23 +23,27 @@ eight =  spark.read.format("libsvm").option("numFeatures", "784").load("mnist_da
 nine =  spark.read.format("libsvm").option("numFeatures", "784").load("mnist_data/9")
 
 print(zero.printSchema())
+print('A')
 dataframes = [zero, one, two, three,four,
              five, six, seven, eight, nine]
 # merge data frame
 df = reduce(lambda first, second: first.union(second), dataframes)
+print('A')
 # repartition dataframe 
 df = df.repartition(200)
+print('A')
 # split the data-frame
 train, test = df.randomSplit([0.8, 0.2], 42)
-
+print('A')
 print(train.show(5))
-
+print('A')
 
 lr = LogisticRegression(maxIter=5, regParam=0.03, 
-                        elasticNetParam=0.5, featuresCol='image', labelCol="label")
+                        elasticNetParam=0.5)
 # define a pipeline model
 sparkdn = Pipeline(stages=[ lr])
 spark_model = sparkdn.fit(train)
+print('A')
 
 
 evaluator = MulticlassClassificationEvaluator() 
