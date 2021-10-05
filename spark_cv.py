@@ -38,18 +38,21 @@ if __name__ == "__main__":
 
     print(training.show(5))
 
-    '''
+    train, test = training.randomSplit([0.8,0.2], 0)
+
+    
     layers = [28*28, 1024, 10]
 
-    # create the trainer and set its parameters
-    trainer = MultilayerPerceptronClassifier(maxIter=10, layers=layers, blockSize=128, seed=1234)
-    # train the model
-    model = trainer.fit(train)
-    # compute precision on the test set
+    mlp = MultilayerPerceptronClassifier(maxIter=10, layers=layers, blockSize=128, seed=1234)
+
+    model = mlp.fit(train)
+
     result = model.transform(test)
+
     predictionAndLabels = result.select("prediction", "label")
+
     evaluator = MulticlassClassificationEvaluator(metricName="precision")
+
     print("Precision: " + str(evaluator.evaluate(predictionAndLabels)))
 
-    sc.stop()
-    '''
+    
