@@ -28,12 +28,11 @@ if __name__ == "__main__":
 
     train = sqlContext.read.format('com.databricks.spark.csv').options(header = True, inferschema = True, sep = ",").load("mnist_data/train.csv")
     features = train.schema.names[1:]
-    print(features)
     vectorizer = VectorAssembler(inputCols=features, outputCol="features")
 
     training = (vectorizer
             .transform(train)
-            .select("_c0", "features")
+            .select("label", "features")
             .toDF("label", "features")
             .cache())
 
