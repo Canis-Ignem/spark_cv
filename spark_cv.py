@@ -11,7 +11,7 @@ from pyspark.ml import Pipeline
 spark = SparkSession.builder.appName('DigitRecog').getOrCreate()
 # loaded image
 zero = spark.read.format("libsvm").option("numFeatures", "784").load("mnist_data/0")
-print(zero.printSchema()
+print(zero.printSchema())
 one = spark.read.format("libsvm").load("mnist_data/1").withColumn("label", lit(1))
 two = spark.read.format("libsvm").load("mnist_data/2").withColumn("label", lit(2))
 three = spark.read.format("libsvm").load("mnist_data/3").withColumn("label", lit(3))
