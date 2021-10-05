@@ -14,7 +14,7 @@ def data_frame_from_file(sqlContext, file_name, fraction):
     parts = lines.map(lambda l: map(lambda s: int(s), l.split(",")))
     samples = parts.map(lambda p: (
         float(p[0]),
-        DenseVector(map(lambda el: el / 255.0, p[1:]))
+        DenseVector(map(lambda el: int(el) / 255.0, p[1:]))
     ))
 
     fields = [
@@ -44,11 +44,12 @@ if __name__ == "__main__":
     train = data_frame_from_file(sqlContext, "/user/keystone/mnist_data/train.csv", 1)
     test = data_frame_from_file(sqlContext, "/user/keystone/mnist_data/mnist_test.csv", 1)
 
-    # layers = [28*28, 14*14, 5*5, 10]
+    print(train.printSchema())
+
     layers = [28*28, 1024, 10]
 
     # create the trainer and set its parameters
-    trainer = MultilayerPerceptronClassifier(maxIter=100, layers=layers, blockSize=128, seed=1234)
+    trainer = MultilayerPerceptronClassifier(maxIter=10, layers=layers, blockSize=128, seed=1234)
     # train the model
     model = trainer.fit(train)
     # compute precision on the test set
