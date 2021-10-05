@@ -11,7 +11,7 @@ from pyspark.ml.feature import VectorAssembler
 
 if __name__ == "__main__":
     conf = SparkConf(True)
-    conf.set("spark.executor.memory", "32g")
+    conf.set("spark.executor.memory", "16g")
     conf.set('spark.executor.cores', '4')
 
     sc = SparkContext(
