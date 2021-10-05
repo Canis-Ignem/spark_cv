@@ -1,13 +1,9 @@
 from __future__ import print_function
 
 from pyspark import SparkContext, SparkConf
-from pyspark.mllib.linalg import DenseVector, VectorUDT
 from pyspark.sql import SQLContext
-
-from pyspark.ml.classification import MultilayerPerceptronClassifier
+from pyspark.ml.classification import LogisticRegression, OneVsRest
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
-from pyspark.sql.types import StructType, StructField, StringType, DoubleType, ArrayType
-
 from pyspark.ml.feature import VectorAssembler
 
 
@@ -16,8 +12,8 @@ from pyspark.ml.feature import VectorAssembler
 
 if __name__ == "__main__":
     conf = SparkConf(True)
-    conf.set("spark.executor.memory", "32g")
-    conf.set('spark.executor.cores', '8')
+    conf.set("spark.executor.memory", "8g")
+    conf.set('spark.executor.cores', '2')
 
     sc = SparkContext(
         appName="multilayer_perceptron_classification_example",
@@ -42,9 +38,10 @@ if __name__ == "__main__":
     train, test = training.randomSplit([0.8,0.2], 0)
 
     
-    layers = [28*28, 1024, 10]
+    lr = LogisticRegression(maxIter=10, tol=1E-6, fitIntercept=True)
 
-    mlp = MultilayerPerceptronClassifier(maxIter=10, layers=layers, blockSize=128, seed=1234)
+    # instantiate the One Vs Rest Classifier.
+    ovr = OneVsRest(classifier=lr)
 
     print("---Training---")
     model = mlp.fit(train)
